@@ -51,16 +51,25 @@
         },
         methods:{
           save() {
+            var getDate = new Date()
             const plan = {
-              name : '二哲',
+              name : 'Moon',
               image : 'https://sfault-avatar.b0.upaiyun.com/888/223/888223038-5646dbc28d530_huge256',
               DDL : this.DDL,
-              totalTime : this.totalTime,
-              templateName : this.templateName
+              templateName : this.templateName,
+              createdBy:'Moon',
+              lastModifiedBy:'Moon',
+              lastModifiedTime:getDate.toLocaleString(),
+              createdTime:getDate.toLocaleString()
             };
-            this.$store.dispatch('savePlan', plan)
-            this.$store.dispatch('addTotalTime', this.totalTime)
-            this.$router.go(-1)
+            this.$http.post('http://127.0.0.1:5000/newTemplate/',plan,{emulateJSON:true}).then(function(res){
+              this.$router.go(-1)
+              this.$router.go('/template-list')
+            })
+            // this.$store.dispatch('savePlan', plan)
+            // this.$store.dispatch('addTotalTime', this.totalTime)
+            
+            // window.location.reload()
           }
         }
     }

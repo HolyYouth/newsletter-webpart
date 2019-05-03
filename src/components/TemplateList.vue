@@ -15,14 +15,14 @@
     <router-view></router-view>
 
     <div class="template-list">
-      <p v-if="!this.templates.length">
+      <p v-if="this.templates.length<=0">
         <strong>No Templates</strong>
       </p>
 
-      <div class="list-group">
+      <div class="list-group" >
         <a class="list-group-item" v-for="(template,index) in this.templates">
           <div class="row">
-            <router-link to="/template-edit">
+            <router-link to="/template-edit" @click.native="sendId(template.id)">
               <div class="col-sm-2 user-details">
                 <img :src="template.avatar" class="avatar img-circle img-responsive">
                 <p class="text-center">
@@ -47,7 +47,7 @@
               </div> -->
             </router-link>
             <div class="col-sm-1">
-              <button class="btn btn-xs btn-danger delete-button" @click="deleteTemplate(index)">X</button>
+              <button class="btn btn-xs btn-danger delete-button" @click="deleteTemplate(template.id)">X</button>
             </div>
           </div>
         </a>
@@ -56,28 +56,46 @@
   </div>
 </template>
 <script>
+import vm from "../event.js"
 export default {
   name: "TemplateList",
-  data(){return {templates:[]}},
-  mounted: function(){
-    this.$http.get('http://127.0.0.1:5000/getTemplateList/').then(function(res){
-        this.templates = res.body;
-      })
+  data(){
+    this.getTemplateList()
+    return {templates:[]}
   },
+  // watch:{
+  //   templates:function(){
+  //     this.getTemplateList()
+  //   }
+  // },
+  // mounted: function(){
+    
+  // },
   // computed: {
-  //   templates() {    
-  //     // return this.$http.get('http://127.0.0.1:5000/getTemplateList/').then(function(res){
-  //     //   return res.body;
-  //     // })
-  //     return '';
+  //   templates() {  
+  //     this.$http.get('http://127.0.0.1:5000/getTemplateList/').then(function(res){
+  //       this.template = res.body.reverse();
+  //     })
+  //     return this.template;
   //   }
   // },
   methods: {
+    getTemplateList(){
+      this.$http.get('http://127.0.0.1:5000/getTemplateList/').then(function(res){
+          this.templates = res.body.reverse();
+      })
+    },
     deleteTemplate(idx) {
-      // 减去总时间
-      this.$store.dispatch("decTotalTime", this.templates[idx].totalTime);
-      // 删除该计划
-      this.$store.dispatch("deletePlan", idx);
+      // // 减去总时间
+      // this.$store.dispatch("decTotalTime", this.templates[idx].totalTime);
+      // // 删除该计划
+      // this.$store.dispatch("deletePlan", idx);
+      this.$http.post('http://127.0.0.1:5000/deleteTemplate/',{id:idx},{emulateJSON:true}).then(function(res){
+        this.$router.go(0)
+      })
+    },
+    sendId(id){
+      vm.$emit("templateId", id);
     }
   }
 };

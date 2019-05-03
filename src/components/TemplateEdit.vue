@@ -1,43 +1,55 @@
 <template>
   <div>
-    <router-link
-      v-if="$route.path !== '/template-edit/create-header'"
-      to="/template-edit/create-header"
-      class="btn btn-primary"
-    >Create header</router-link>
+    <div v-if='!this.template.header'>
+      <router-link
+        v-if="$route.path !== '/template-edit/create-header'"
+        to="/template-edit/create-header"
+        class="btn btn-primary"
+      >Create header</router-link>
 
-    <div v-if="$route.path === '/template-edit/create-header'">
-      <h3>Create header</h3>
-      <router-view></router-view>
+      <div v-if="$route.path === '/template-edit/create-header'">
+        <h3>Create header</h3>
+        <router-view></router-view>
+      </div>
+      <hr>
     </div>
-    <hr>
-    
-
-    <router-link
-      v-if="$route.path !== '/template-edit/add-topic'"
-      to="/template-edit/add-topic"
-      class="btn btn-primary"
-    >Add Topic</router-link>
-
-    <div v-if="$route.path === '/template-edit/add-topic'">
-      <h3>Add Topic</h3>
-      <router-view></router-view>
+    <div v-else>
+      <img :src='this.template.header.imgSrc'>
     </div>
-    <hr>
 
-    <router-link
-      v-if="$route.path !== '/template-edit/edit-headline'"
-      to="/template-edit/edit-headline"
-      class="btn btn-primary"
-    >Edit Headline</router-link>
+    <div v-if='(this.template.topics==null||this.template.topics.length==0)'>
+      <router-link
+        v-if="$route.path !== '/template-edit/add-topic'"
+        to="/template-edit/add-topic"
+        class="btn btn-primary"
+      >Add Topic</router-link>
 
-    <div v-if="$route.path === '/template-edit/edit-headline'">
-      <h3>Edit Headline</h3>
-      <router-view></router-view>
+      <div v-if="$route.path === '/template-edit/add-topic'">
+        <h3>Add Topic</h3>
+        <router-view></router-view>
+      </div>
+      <hr>
     </div>
-    <hr>
-    
-    
+    <div v-else>
+
+    </div>
+
+    <div v-if='!this.template.headline'>
+      <router-link
+        v-if="$route.path !== '/template-edit/edit-headline'"
+        to="/template-edit/edit-headline"
+        class="btn btn-primary"
+      >Edit Headline</router-link>
+
+      <div v-if="$route.path === '/template-edit/edit-headline'">
+        <h3>Edit Headline</h3>
+        <router-view></router-view>
+      </div>
+      <hr>
+    </div>
+    <div v-else>
+
+    </div>
 
     <!-- <div class="template-list">
       <p v-if="!templates.length">
@@ -79,19 +91,45 @@
   </div>
 </template>
 <script>
+import vm from "../event.js"
 export default {
-  name: "TimeEntries",
-  computed: {
-    templates() {
-      return this.$store.state.list.reverse();
-    }
+  name: "TemplateEdit",
+  // props:['templateId'],
+  data(){
+    
+    return {
+      templateId:0,
+      template:[]
+      }
+  },
+  // computed: {
+  //   templates() {
+  //     return this.$store.state.list.reverse();
+  //   }
+  // },
+  mounted(){
+    this.receiveId();
+    this.getTemplateById();
   },
   methods: {
+    getTemplateById(){
+      this.$http.post('http://127.0.0.1:5000/getTemplateById/',{id:this.templateId},{emulateJSON:true}).then(function(res){
+          this.template = res.body;
+          console.log(this.template);
+      })
+    },
     deleteTemplate(idx) {
       // 减去总时间
       this.$store.dispatch("decTotalTime", this.templates[idx].totalTime);
       // 删除该计划
       this.$store.dispatch("deletePlan", idx);
+    },
+    receiveId(id){
+      vm.$on("templateId", (id)=>{
+        // console.log(id);
+        this.templateId = id;
+        // console.log(this.templateId);
+      });
     }
   }
 };
