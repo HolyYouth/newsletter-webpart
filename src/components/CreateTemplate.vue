@@ -41,7 +41,7 @@
 <script>
 
     export default {
-        name : 'LogTime',
+        name : 'CreateTemplate',
         data() {
             return {
                 DDL : '',

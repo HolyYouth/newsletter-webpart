@@ -1,9 +1,9 @@
 <template>
   <div>
-    <div v-if='!this.template.header'>
+    <div v-if="!this.template.header">
       <router-link
         v-if="$route.path !== '/template-edit/create-header'"
-        to="/template-edit/create-header"
+        :to="{path:'/template-edit/create-header',query:{templateId:this.templateId}}"
         class="btn btn-primary"
       >Create header</router-link>
 
@@ -13,14 +13,26 @@
       </div>
       <hr>
     </div>
-    <div v-else>
-      <img :src='this.template.header.imgSrc'>
+    <div v-else class="container">
+      <router-link
+        v-if="$route.path !== '/template-edit/create-header'"
+        :to="{path:'/template-edit/create-header',query:{templateId:this.templateId}}"
+      >
+        <span v-bind:title="'click picture to edit header'">
+          <img :src="this.template.header.imgSrc" width="80%">
+        </span>
+      </router-link>
+      <div v-if="$route.path === '/template-edit/create-header'">
+        <h3>Edit header</h3>
+        <router-view></router-view>
+      </div>
+      <hr>
     </div>
 
-    <div v-if='(this.template.topics==null||this.template.topics.length==0)'>
+    <div v-if="!this.template.topics">
       <router-link
         v-if="$route.path !== '/template-edit/add-topic'"
-        to="/template-edit/add-topic"
+        :to="{path:'/template-edit/add-topic',query:{templateId:this.templateId}}"
         class="btn btn-primary"
       >Add Topic</router-link>
 
@@ -30,11 +42,34 @@
       </div>
       <hr>
     </div>
-    <div v-else>
+    <div v-else style="height:0.2">
+      <div class="navbar-collapse collapse">
+        <ul class="nav navbar-nav" v-for="(topic,index) in this.template.topics">
+          <li style="12.5%">
+            <a :href="'#'+topic.id+'.html'">
+              <span>
+              <img :src="topic.imgSrc" style="width:100px">
+              </span>
+              <p>{{topic.item}}</p>
+            </a>
+            
+          </li>
+        </ul>
+        <router-link
+          v-if="$route.path !== '/template-edit/add-topic'"
+          :to="{path:'/template-edit/add-topic',query:{templateId:this.templateId}}"
+          class="btn btn-primary"
+        >Add Topic</router-link>
+      </div>
 
+      <div v-if="$route.path === '/template-edit/add-topic'">
+        <h3>Add Topic</h3>
+        <router-view></router-view>
+      </div>
+      <hr>
     </div>
 
-    <div v-if='!this.template.headline'>
+    <div v-if="!this.template.headline">
       <router-link
         v-if="$route.path !== '/template-edit/edit-headline'"
         to="/template-edit/edit-headline"
@@ -47,9 +82,7 @@
       </div>
       <hr>
     </div>
-    <div v-else>
-
-    </div>
+    <div v-else></div>
 
     <!-- <div class="template-list">
       <p v-if="!templates.length">
@@ -87,50 +120,62 @@
           </div>
         </a>
       </div>
-    </div> -->
+    </div>-->
   </div>
 </template>
 <script>
-import vm from "../event.js"
+import VueRouter from "vue-router";
+import vm from "../event.js";
 export default {
+  // inject:["reload"],
   name: "TemplateEdit",
   // props:['templateId'],
-  data(){
-    
+  data() {
+    // this.getTemplateById()
+
     return {
-      templateId:0,
-      template:[]
-      }
+      templateId: this.$route.query.templateId,
+      template: []
+    };
   },
-  // computed: {
-  //   templates() {
-  //     return this.$store.state.list.reverse();
-  //   }
+  // activated:function(){
+  //   this.getTemplateById()
+  //   // this.$root.reload()
   // },
-  mounted(){
-    this.receiveId();
+  mounted() {
+    // console.log($route.params.templateId)
+    // this.templateId = this.$router.params.id;
+    // this.receiveId();
     this.getTemplateById();
+    // this.$root.reload()
+  },
+  watch: {
+    templateId: "getTemplateById"
   },
   methods: {
-    getTemplateById(){
-      this.$http.post('http://127.0.0.1:5000/getTemplateById/',{id:this.templateId},{emulateJSON:true}).then(function(res){
+    getTemplateById() {
+      this.$http
+        .post(
+          "http://127.0.0.1:5000/getTemplateById/",
+          { id: this.templateId },
+          { emulateJSON: true }
+        )
+        .then(function(res) {
           this.template = res.body;
-          console.log(this.template);
-      })
-    },
-    deleteTemplate(idx) {
-      // 减去总时间
-      this.$store.dispatch("decTotalTime", this.templates[idx].totalTime);
-      // 删除该计划
-      this.$store.dispatch("deletePlan", idx);
-    },
-    receiveId(id){
-      vm.$on("templateId", (id)=>{
-        // console.log(id);
-        this.templateId = id;
-        // console.log(this.templateId);
-      });
+          // console.log(this.template);
+        });
     }
+    // receiveId() {
+    //   vm.$on("templateId", id => {
+    //     console.log(id);
+    //     this.templateId = id;
+    //     console.log(this.templateId);
+    //   });
+    // },
+    // sendId(id){
+    //   // console.log(this.templateId)
+    //   vm.$emit("templateId", this.templateId);
+    // }
   }
 };
 </script>
@@ -152,4 +197,16 @@ export default {
 .comment-section {
   padding: 20px;
 }
+.box ul {
+list-style-type: none;
+margin:0px;
+padding:0px;
+}
+.box li {
+margin:7px;
+padding:5px;
+float:left;
+width:150px;
+height:190px;
+} 
 </style>

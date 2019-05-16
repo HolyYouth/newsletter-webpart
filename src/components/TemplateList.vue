@@ -1,12 +1,12 @@
 <template>
   <div>
     <router-link
-      v-if="$route.path !== '/template-list/log-time'"
-      to="/template-list/log-time"
+      v-if="$route.path !== '/template-list/create-template'"
+      to="/template-list/create-template"
       class="btn btn-primary"
     >Create</router-link>
 
-    <div v-if="$route.path === '/template-list/log-time'">
+    <div v-if="$route.path === '/template-list/create-template'">
       <h3>New Template</h3>
     </div>
 
@@ -22,7 +22,7 @@
       <div class="list-group" >
         <a class="list-group-item" v-for="(template,index) in this.templates">
           <div class="row">
-            <router-link to="/template-edit" @click.native="sendId(template.id)">
+            <router-link :to="{path:'/template-edit',query:{templateId:template.id}}" @click.native="sendId(template.id)">
               <div class="col-sm-2 user-details">
                 <img :src="template.avatar" class="avatar img-circle img-responsive">
                 <p class="text-center">
@@ -95,6 +95,7 @@ export default {
       })
     },
     sendId(id){
+      console.log('temlist.sendId'+id)
       vm.$emit("templateId", id);
     }
   }

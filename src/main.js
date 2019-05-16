@@ -4,7 +4,7 @@ import store from './store'
 import App from './App'
 import Home from './components/Home'
 import TemplateList from './components/TemplateList.vue'
-import LogTime from './components/LogTime.vue'
+import CreateTemplate from './components/CreateTemplate.vue'
 import NotFound from './components/404'
 import TemplateEdit from './components/TemplateEdit'
 import CreateHeader from './components/CreateHeader'
@@ -26,14 +26,16 @@ const routes = [{
   path : '/template-list',
   component : TemplateList,
   children : [{
-    path : 'log-time',
-    component : LogTime,
+    path : 'create-template',
+    component : CreateTemplate,
   }]
 },{
   path : '/template-edit',
+  name : 'template-edit',
   component : TemplateEdit,
   children : [{
     path : 'create-header',
+    name : 'create-header',
     component : CreateHeader
   },{
     path : 'add-topic',
