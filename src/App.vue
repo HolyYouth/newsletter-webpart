@@ -1,32 +1,31 @@
 <template>
   <div id="wrapper">
-    
-      <nav class="navbar navbar-default">
-        <div class="container">
-          <a class="navbar-brand">
-            <i class="glyphicon glyphicon-time"></i>
-            Newsletter
-          </a>
-          <ul class="nav navbar-nav">
-            <li>
-              <router-link to="/home">Home</router-link>
-            </li>
-            <li>
-              <router-link to="/template-list">Template List</router-link>
-            </li>
-          </ul>
-        </div>
-      </nav>
+    <nav class="navbar navbar-default">
       <div class="container">
-        <!-- <div class="col-sm-3">
-        <sidebar></sidebar>
-        </div>-->
-        <div>
-          <keep-alive>
-          <router-view v-if="isRouterAlive"></router-view>
-          </keep-alive>
-        </div>
+        <a class="navbar-brand">
+          <i class="glyphicon glyphicon-time"></i>
+          Newsletter
+        </a>
+        <ul class="nav navbar-nav">
+          <li>
+            <router-link to="/home">Home</router-link>
+          </li>
+          <li>
+            <router-link to="/template-list">Template List</router-link>
+          </li>
+        </ul>
       </div>
+    </nav>
+    <div class="container">
+      <!-- <div class="col-sm-3">
+        <sidebar></sidebar>
+      </div>-->
+      <div>
+        <keep-alive>
+          <router-view v-if="isRouterAlive"></router-view>
+        </keep-alive>
+      </div>
+    </div>
   </div>
 </template>
 
