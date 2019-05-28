@@ -86,17 +86,15 @@ export default {
       })
     },
     deleteTemplate(idx) {
-      // // 减去总时间
-      // this.$store.dispatch("decTotalTime", this.templates[idx].totalTime);
-      // // 删除该计划
-      // this.$store.dispatch("deletePlan", idx);
       this.$http.post('http://127.0.0.1:5000/deleteTemplate/',{id:idx},{emulateJSON:true}).then(function(res){
         this.$router.go(0)
       })
     },
     sendId(id){
-      console.log('temlist.sendId'+id)
-      vm.$emit("templateId", id);
+      var test=document.getElementsByTagName('html')[0].innerHTML; 
+      console.log(test); 
+      // console.log('temlist.sendId'+id)
+      // vm.$emit("templateId", id);
     }
   }
 };
