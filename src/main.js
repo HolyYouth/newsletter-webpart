@@ -78,17 +78,3 @@ var app = new Vue({
   ...App,
 });
 
-
-
-const routes = [{
-  path : '',
-  component : 
-}]
-
-const router = new VueRouter({
-  routes
-});
-                
-var app = new Vue({
-  router,
-})
